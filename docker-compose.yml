@@ -1,0 +1,11 @@
+services:
+  ApiHotelAutomation:
+    build: .
+    env_file:
+      - ./HotResAPI/ApiAuth.env
+      - ./MessageAPI/api_token.env
+      - ./secret.env
+    volumes:
+      - ./TTlockAPI/payload.json:/app/TTlockAPI/payload.json
+      - ./TTlockAPI/ttlock_tokeny.json:/app/TTlockAPI/ttlock_tokeny.json
+      - ./DoneRes.json:/app/DoneRes.json
