@@ -38,7 +38,7 @@ def main():
                 print(f"Generated password {haslo}")
 
                 departure=tuple(res["departure"].split("-"))
-                reshasla=ttapi.SetPassword(alias_dict[room['title']],departure) #It works because in ttlock app we set all aliases of locks equal to name of room in hotres
+                reshasla=ttapi.SetPassword(alias_dict[room['title']],departure,password=haslo) #It works because in ttlock app we set all aliases of locks equal to name of room in hotres
                 if reshasla==-1:
                      return 1
                 hasla.append((room['title'],haslo)) # not really user friendly needs polish (not language xd)

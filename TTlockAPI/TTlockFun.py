@@ -22,8 +22,10 @@ def LockList(daneAccess=daneAccess,danePayload=danePayload): # Listing all locks
     RecDict=records.json()
     FormRec=[{"alias": el["lockAlias"],"Id" : el["lockId"], "group" : el['lockVersion']['groupId'] }for el in RecDict["list"]] #RecDict formated for my needs
     return FormRec
-def SetPassword(lockId,end:tuple,start=(-1,-1,-1),daneAccess=daneAccess,danePayload=danePayload,endHour=(14,0,0),startHour=(0,0,0)):#Setting passwords on lock with Id the password are temporary determined by start(optional) and end
-    url="https://euapi.ttlock.com/v3/keyboardPwd/get"
+def SetPassword(lockId,end:tuple,password,start=(-1,-1,-1),daneAccess=daneAccess,danePayload=danePayload,endHour=(14,0,0),startHour=(0,0,0)):#Setting passwords on lock with Id the password are temporary determined by start(optional) and end
+    url="https://euapi.ttlock.com/v3/keyboardPwd/add"
+    #For it to work so u could setup custom passcodes u need gateways on locks
+    #!!! Untested Feature !!!
     end_dt=datetime(int(end[0]),int(end[1]),int(end[2]),endHour[0],endHour[1],endHour[2])
     if start==(-1,-1,-1):
         start_dt=datetime.now()
@@ -35,12 +37,14 @@ def SetPassword(lockId,end:tuple,start=(-1,-1,-1),daneAccess=daneAccess,danePayl
         "clientId": danePayload["clientId"],
         "accessToken": daneAccess["access_token"],
         "lockId" : lockId,
+        "keyboardPwd" : password,
         "keyboardPwdType" : 3,
         "startDate" : start_ms,
         "endDate" : end_ms,
         "date" : int(time.time())*1000,
+        "addType" : 2
     }
-    PassId=requests.get(url=url,params=data)
+    PassId=requests.post(url=url,params=data)
     if not PassId.ok:
         print(f"Sth wrong with SetPassword for TTlock details:\n{PassId.json()}")
         return -1
